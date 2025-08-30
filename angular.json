@@ -1,0 +1,123 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "nlabs-text-editor-app": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "projects/nlabs-text-editor-app",
+      "sourceRoot": "projects/nlabs-text-editor-app/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "projects/nlabs-text-editor-app/src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "projects/nlabs-text-editor-app/tsconfig.app.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/nlabs-text-editor-app/public"
+              }
+            ],
+            "styles": [
+              "projects/nlabs-text-editor/src/styles.css",
+              "projects/nlabs-text-editor-app/src/styles.css"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "nlabs-text-editor-app:build:production"
+            },
+            "development": {
+              "buildTarget": "nlabs-text-editor-app:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular/build:extract-i18n"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "projects/nlabs-text-editor-app/tsconfig.spec.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/nlabs-text-editor-app/public"
+              }
+            ],
+            "styles": [
+              "projects/nlabs-text-editor-app/src/styles.css"
+            ]
+          }
+        }
+      }
+    },
+    "nlabs-text-editor": {
+      "projectType": "library",
+      "root": "projects/nlabs-text-editor",
+      "sourceRoot": "projects/nlabs-text-editor/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/nlabs-text-editor/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/nlabs-text-editor/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "tsConfig": "projects/nlabs-text-editor/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

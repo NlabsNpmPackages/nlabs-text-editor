@@ -1,0 +1,19 @@
+<div class="app-container">
+
+  <header class="app-header">
+    <h1>🖊️ Derestech Metin Editörü</h1>
+    <div class="header-controls">
+      <label class="dark-mode-toggle">
+        <input type="checkbox" [(ngModel)]="darkMode">
+        🌙 Gece Modu
+      </label>
+    </div>
+  </header>
+  <main class="main-content">
+    <div class="editor-section">
+      <nlabs-text-editor [content]="editorContent" [minHeight]="'500px'" [darkMode]="darkMode"
+          (contentChange)="onContentChange($event)" placeholder="Metin girin...">
+      </nlabs-text-editor>
+    </div>
+  </main>
+</div>
