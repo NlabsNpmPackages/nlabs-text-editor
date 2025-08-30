@@ -1,59 +1,133 @@
-# NlabsLib
+# NLabs Text Editor
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.0.
+Angular 18 tabanlı modern ve kullanıcı dostu rich text editor kütüphanesi. Bu proje, web uygulamalarında gelişmiş metin düzenleme özellikleri sunmak için tasarlanmıştır.
 
-## Development server
+## 🚀 Özellikler
 
-To start a local development server, run:
+- ✅ **Rich Text Editing**: Zengin metin düzenleme özellikleri
+- ✅ **Heading Levels**: H1-H6 arası başlık seviyeleri
+- ✅ **Text Formatting**: Kalın, italik, altı çizili metin biçimlendirme
+- ✅ **Text Alignment**: Sol, orta, sağ ve iki yana yaslama
+- ✅ **Lists**: Sıralı ve sırasız liste desteği
+- ✅ **Links**: Bağlantı ekleme ve düzenleme
+- ✅ **Font Customization**: Font ailesi ve boyut seçimi
+- ✅ **Color Support**: Metin ve arka plan rengi
+- ✅ **Word Content**: Word belgelerinden kopyala-yapıştır
+- ✅ **Clean HTML**: Temiz HTML çıktısı
+- ✅ **Responsive Design**: Mobil uyumlu tasarım
+- ✅ **Tooltips**: Tüm butonlarda açıklayıcı ipuçları
+
+## 📦 Kurulum
+
+```bash
+npm install nlabs-text-editor
+```
+
+## 🛠️ Kullanım
+
+Angular projenizde modül olarak import edin:
+
+```typescript
+import { NlabsTextEditorComponent } from 'nlabs-text-editor';
+
+@Component({
+  standalone: true,
+  imports: [NlabsTextEditorComponent],
+  // ...
+})
+```
+
+Template'de kullanın:
+
+```html
+<nlabs-text-editor 
+  [(ngModel)]="content"
+  [placeholder]="'Metin yazın...'"
+  [height]="'400px'">
+</nlabs-text-editor>
+```
+
+## 🧪 Geliştirme
+
+Yerel geliştirme sunucusunu başlatmak için:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Sunucu çalıştıktan sonra, tarayıcınızda `http://localhost:4200/` adresine gidin.
 
-## Code scaffolding
+## 🏗️ Proje Yapısı
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```
+projects/
+├── nlabs-text-editor/          # Ana kütüphane
+│   ├── src/
+│   │   ├── lib/
+│   │   │   └── nlabs-text-editor/
+│   │   │       ├── nlabs-text-editor.ts      # Ana component
+│   │   │       ├── nlabs-text-editor.html    # Template
+│   │   │       └── nlabs-text-editor.css     # Stil dosyası
+│   │   └── public-api.ts       # Public API export
+└── nlabs-text-editor-app/      # Demo uygulaması
+    └── src/
+        └── app/               # Test uygulaması
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 🔧 Build
+
+Kütüphaneyi build etmek için:
 
 ```bash
-ng generate --help
+ng build nlabs-text-editor
 ```
 
-## Building
+Build artifacts `dist/` klasöründe saklanır.
 
-To build the project run:
+## 🧪 Test
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Unit testleri çalıştırmak için:
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
+## 📖 API Referansı
 
-For end-to-end (e2e) testing, run:
+### Input Properties
 
-```bash
-ng e2e
-```
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `ngModel` | `string` | `''` | Editor içeriği (two-way binding) |
+| `placeholder` | `string` | `'Write something...'` | Placeholder metni |
+| `height` | `string` | `'300px'` | Editor yüksekliği |
+| `disabled` | `boolean` | `false` | Editor devre dışı durumu |
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### Output Events
 
-## Additional Resources
+| Event | Type | Description |
+|-------|------|-------------|
+| `ngModelChange` | `string` | İçerik değiştiğinde emit edilir |
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## 🤝 Katkıda Bulunma
+
+1. Bu projeyi fork edin
+2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
+3. Değişikliklerinizi commit edin (`git commit -m 'Add amazing feature'`)
+4. Branch'ınızı push edin (`git push origin feature/amazing-feature`)
+5. Pull Request oluşturun
+
+## 📄 Lisans
+
+Bu proje MIT lisansı altında lisanslanmıştır.
+
+## 📞 İletişim
+
+- GitHub: [NlabsNpmPackages](https://github.com/NlabsNpmPackages)
+- Repository: [nlabs-text-editor](https://github.com/NlabsNpmPackages/nlabs-text-editor)
+
+## 🔗 Bağlantılar
+
+- [Angular CLI Dökümantasyonu](https://angular.dev/tools/cli)
+- [Angular Standalone Components](https://angular.dev/guide/components/importing)
+- [NPM Package](https://www.npmjs.com/package/nlabs-text-editor)
