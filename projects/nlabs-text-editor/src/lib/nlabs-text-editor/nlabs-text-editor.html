@@ -5,9 +5,7 @@
         <div class="toolbar-group">
             <select (change)="applyHeading($any($event.target).value)" class="heading-select">
                 @for (heading of headingLevels; track $index) {
-                @if ($index === 0) {
                 <option [value]="heading.value">{{heading.text}}</option>
-                }
                 }
             </select>
         </div>
@@ -149,8 +147,12 @@
             <button type="button" (click)="redo()" title="İleri Al (Ctrl+Y)" class="tool-btn">
                 ↷ İleri Al
             </button>
-            <button type="button" (click)="showOutput = !showOutput" title="HTML Çıktısını Göster/Gizle"
-                class="tool-btn">
+            <button type="button" (click)="togglePreview()" title="Ön İzleme Paneli" 
+                class="tool-btn" [class.active]="showPreview">
+                👁️ Ön İzleme
+            </button>
+            <button type="button" (click)="toggleHtmlOutput()" title="HTML Çıktı Paneli" 
+                class="tool-btn" [class.active]="showOutput">
                 📄 HTML Çıktı
             </button>
         </div>
@@ -193,32 +195,39 @@
     </div>
 
     <!-- Preview Modu -->
-    @if(isPreviewMode){
+    <!-- Ön İzleme Paneli - Senkronize -->
+    @if(showPreview){
     <div class="preview-container">
         <div class="preview-header">
-            <h4>🔍 Önizleme - Gerçek Görünüm</h4>
-            <p>Bu alan, içeriğinizin son kullanıcıya nasıl görüneceğini gösterir.</p>
+            <h4>�️ Anlık Ön İzleme</h4>
+            <p>İçerik yazarken anlık olarak güncellenir</p>
+            <button type="button" (click)="showPreview = false" class="close-btn" title="Paneli Kapat">
+                ✕ Kapat
+            </button>
         </div>
-        <div class="preview-content" [innerHTML]="content"></div>
+        <div class="preview-content" [innerHTML]="previewContent"></div>
     </div>
     }
 
-    <!-- HTML Çıktı Paneli -->
+    <!-- HTML Çıktı Paneli - Senkronize -->
     @if (showOutput) {
     <div class="output-panel">
         <div class="output-header">
-            <h4>📄 HTML Çıktısı</h4>
+            <h4>📄 Anlık HTML Çıktısı</h4>
             <div class="output-actions">
+                <button type="button" (click)="copyHtmlOutput()" class="copy-btn" title="HTML Kopyala">
+                    📋 Kopyala
+                </button>
                 <button type="button" (click)="showOutput = false" class="close-btn" title="Paneli Kapat">
                     ✕ Kapat
                 </button>
             </div>
         </div>
         <div class="output-content">
-            <textarea class="html-output" readonly [value]="content" rows="15"></textarea>
+            <textarea class="html-output" readonly [value]="htmlOutput" rows="15"></textarea>
         </div>
         <div class="output-info">
-            <small>📋 Bu HTML çıktısını kopyalayıp herhangi bir web sayfasında kullanabilirsiniz.</small>
+            <small>⚡ Bu HTML çıktısı yazarken anlık olarak güncellenir. Kopyalayıp herhangi bir web sayfasında kullanabilirsiniz.</small>
         </div>
     </div>
     }

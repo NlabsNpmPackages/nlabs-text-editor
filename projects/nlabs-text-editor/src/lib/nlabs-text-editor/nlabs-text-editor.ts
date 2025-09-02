@@ -23,10 +23,13 @@ export class TextEditor implements OnInit, AfterViewInit {
   @Input() darkMode: boolean = false;
   @Output() contentChange = new EventEmitter<string>();
 
-  // Editor durumu - Updated
+  // Editör durumu ve ayarları
   isEditorActive = false;
   isPreviewMode = false;
   showOutput = false; // HTML çıktı paneli
+  showPreview = false; // Ön izleme paneli
+  htmlOutput = ''; // Anlık HTML çıktısı
+  previewContent = ''; // Ön izleme içeriği
   selectedText = '';
   currentFontSize = 12;
   currentFontFamily = 'Calibri';
@@ -36,7 +39,7 @@ export class TextEditor implements OnInit, AfterViewInit {
   charCount = 0;
   paragraphCount = 0;
 
-  // Menu states
+  // Menü durumları
   editMenuOpen = false;
   insertMenuOpen = false;
   viewMenuOpen = false;
@@ -44,11 +47,11 @@ export class TextEditor implements OnInit, AfterViewInit {
   mergeMenuOpen = false;
   helpMenuOpen = false;
 
-  // Hover menu system
+  // Hover menü sistemi
   hoverEnabled = false;
   hoverTimer: any;
 
-  // Formatlar - Word uyumlu
+  // Font boyutları ve aileleri - Word benzeri
   fontSizes = [
     8, 9, 10, 11, 12, 13, 14, 16, 18, 20, 22, 24, 26, 28, 32, 36, 48, 72,
   ];
@@ -123,18 +126,21 @@ export class TextEditor implements OnInit, AfterViewInit {
     editorEl.style.fontSize = '12pt';
     editorEl.style.lineHeight = '1.08';
 
-    // Word paste olayını gelişmiş handle et
+    // Word belgelerinden kopyalama işlemlerini yakala
     editorEl.addEventListener('paste', (e) => {
-      console.log('🍃 BASİT PASTE - BROWSER HALLETSİN!');
-      // Browser'ın default paste'ine izin ver
+      console.log('Yapıştırma işlemi başlatıldı');
+      // Tarayıcının kendi yapıştırma işlemini kullan
       setTimeout(() => {
         this.onContentChange();
         this.updateWordCount();
-        console.log('✅ Paste tamamlandı!');
+        // Senkronizasyon panellerini güncelle
+        this.updateHtmlOutput();
+        this.updatePreviewContent();
+        console.log('İçerik başarıyla yapıştırıldı');
       }, 50);
     });
 
-    // Input olayları
+    // Kullanıcı yazarken içeriği takip et
     editorEl.addEventListener('input', () => {
       this.onContentChange();
     });
@@ -2037,31 +2043,37 @@ export class TextEditor implements OnInit, AfterViewInit {
     // Temizlenmiş içerik (HTML çıktı için)
     const cleanContent = this.cleanHtmlOutput(content);
 
+    // Anlık senkronizasyon - HTML çıktıyı güncelle
+    this.htmlOutput = cleanContent;
+    
+    // Ön izleme içeriğini güncelle (görsel render için)
+    this.previewContent = cleanContent;
+
     this.contentChange.emit(cleanContent);
     this.updateWordCount();
   }
 
-  // HTML Çıktısını Temizle
+  // HTML çıktısını temizle ve kullanılabilir hale getir
   cleanHtmlOutput(html: string): string {
     let cleaned = html;
 
-    // Word MSO stillerini temizle
+    // Microsoft Word stillerini kaldır
     cleaned = cleaned.replace(/mso-[^;:]*:[^;]*;?/gi, '');
 
-    // Word namespace taglarını temizle
+    // Word özel etiketlerini temizle
     cleaned = cleaned.replace(/<\/?o:[^>]*>/gi, '');
 
-    // Lang attributelarını temizle
+    // Dil özelliklerini kaldır
     cleaned = cleaned.replace(/\s*lang="[^"]*"/gi, '');
 
-    // MSO class'larını temizle
+    // MSO sınıf isimlerini temizle
     cleaned = cleaned.replace(/class="Mso[^"]*"/gi, '');
 
-    // Boş style attributelarını temizle
+    // Boş stil özelliklerini kaldır
     cleaned = cleaned.replace(/\s*style=""\s*/gi, ' ');
     cleaned = cleaned.replace(/\s*style="\s*"\s*/gi, ' ');
 
-    // Çoklu boşlukları temizle
+    // Fazla boşlukları düzenle
     cleaned = cleaned.replace(/\s+/g, ' ');
 
     // Font family'leri sadeleştir
@@ -2086,6 +2098,10 @@ export class TextEditor implements OnInit, AfterViewInit {
     if (this.editor) {
       this.editor.nativeElement.innerHTML = this.content;
       this.updateWordCount();
+      
+      // Senkronizasyon için HTML çıktı ve ön izlemeyi güncelle
+      this.updateHtmlOutput();
+      this.updatePreviewContent();
     }
   }
 
@@ -2136,10 +2152,11 @@ export class TextEditor implements OnInit, AfterViewInit {
   }
 
   togglePreview() {
-    this.isPreviewMode = !this.isPreviewMode;
-    if (this.isPreviewMode) {
+    this.showPreview = !this.showPreview;
+    this.isPreviewMode = this.showPreview; // Geriye uyumluluk için
+    if (this.showPreview) {
       // Preview moduna geçerken içeriği güncelle
-      this.content = this.editor.nativeElement.innerHTML;
+      this.updatePreviewContent();
     }
   }
 
@@ -2246,7 +2263,7 @@ export class TextEditor implements OnInit, AfterViewInit {
     this.onContentChange();
   }
 
-  // =========== HTML ÇIKTI FONKSİYONLARI =========== //
+  // HTML çıktı ve temizleme fonksiyonları
 
   // HTML çıktı panelini aç/kapat
   toggleOutput() {
@@ -2300,7 +2317,8 @@ export class TextEditor implements OnInit, AfterViewInit {
 
   // HTML çıktısını kopyala
   async copyHtmlOutput() {
-    const htmlContent = this.getFormattedHtml();
+    // Anlık HTML çıktısını kullan
+    const htmlContent = this.htmlOutput || this.getFormattedHtml();
     try {
       await navigator.clipboard.writeText(htmlContent);
       alert('HTML içeriği panoya kopyalandı!');
@@ -2612,7 +2630,7 @@ ${htmlContent}
     }
   }
 
-  // ========== EXPORT/IMPORT OPERATIONS ==========
+  // Dışa aktarma ve içe aktarma işlemleri
 
   extractTextFromBinary(content: string): string {
     // Binary data'dan text çıkarmaya çalış
@@ -2843,7 +2861,7 @@ ${htmlContent}
     return '';
   }
 
-  // ========== EDIT OPERATIONS ==========
+  // Düzenleme menüsü işlevleri
   showFindReplace() {
     this.editMenuOpen = false;
     const searchTerm = prompt('Aranacak metin:');
@@ -2874,7 +2892,7 @@ ${htmlContent}
     }
   }
 
-  // ========== VIEW OPERATIONS ==========
+  // Görünüm ayarları ve kontrolleri
   toggleMergeFieldsPreview() {
     this.viewMenuOpen = false;
     alert('Merge Fields Preview özelliği geliştirilmekte.');
@@ -2965,7 +2983,7 @@ ${htmlContent}
     }
   }
 
-  // ========== FORMAT OPERATIONS ==========
+  // Format menüsü işlevleri
   formatBold() {
     this.formatMenuOpen = false;
     this.toggleFormat('bold');
@@ -2991,7 +3009,7 @@ ${htmlContent}
     this.openBgColorPicker();
   }
 
-  // ========== MERGE OPERATIONS ==========
+  // Birleştirme ve kaynak işlemleri
   showLabelsDefaults() {
     this.mergeMenuOpen = false;
     alert('Labels Default Values özelliği geliştirilmekte.');
@@ -3007,7 +3025,7 @@ ${htmlContent}
     alert('Execute Merge özelliği geliştirilmekte.');
   }
 
-  // ========== HELP OPERATIONS ==========
+  // Yardım ve bilgi fonksiyonları
   showAbout() {
     this.helpMenuOpen = false;
     alert(
@@ -3078,9 +3096,35 @@ Bu editör özel olarak geliştirilmiştir.
     );
   }
 
-  // ========== THEME OPERATIONS ==========
+  // Tema değiştirme işlemleri
   toggleTheme() {
     this.darkMode = !this.darkMode;
     this.closeAllMenus();
+  }
+
+  // Senkronizasyon ve paneller
+  
+  // HTML çıktı panelini aç/kapat  
+  toggleHtmlOutput() {
+    this.showOutput = !this.showOutput;
+    if (this.showOutput) {
+      this.updateHtmlOutput();
+    }
+  }
+
+  // Ön izleme içeriğini güncelle
+  updatePreviewContent() {
+    if (this.editor && this.editor.nativeElement) {
+      const content = this.editor.nativeElement.innerHTML;
+      this.previewContent = this.cleanHtmlOutput(content);
+    }
+  }
+
+  // HTML çıktısını güncelle
+  updateHtmlOutput() {
+    if (this.editor && this.editor.nativeElement) {
+      const content = this.editor.nativeElement.innerHTML;
+      this.htmlOutput = this.cleanHtmlOutput(content);
+    }
   }
 }

@@ -1,6 +1,6 @@
 # NLabs Text Editor
 
-Angular 18 tabanlı modern ve kullanıcı dostu rich text editor kütüphanesi. Bu proje, web uygulamalarında gelişmiş metin düzenleme özellikleri sunmak için tasarlanmıştır.
+Angular 20+ tabanlı modern ve kullanıcı dostu rich text editor kütüphanesi. Bu proje, web uygulamalarında gelişmiş metin düzenleme özellikleri sunmak için tasarlanmıştır.
 
 ## 🚀 Özellikler
 

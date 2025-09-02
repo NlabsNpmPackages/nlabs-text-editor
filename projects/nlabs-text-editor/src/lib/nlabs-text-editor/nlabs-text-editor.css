@@ -2488,3 +2488,172 @@ body.light-mode .output-header h4 {
   outline: 3px solid var(--editor-gradient-start);
   outline-offset: 2px;
 }
+
+/* =========== SENKRONIZASYON PANELLERİ =========== */
+
+/* Aktif buton stilleri */
+.tool-btn.active {
+  background: linear-gradient(135deg, var(--editor-gradient-start), var(--editor-gradient-end));
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Ön izleme paneli özel stilleri */
+.preview-container {
+  position: relative;
+  animation: slideIn 0.3s ease-out;
+}
+
+.preview-container .preview-header {
+  position: relative;
+  padding: 15px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 8px 8px 0 0;
+  color: white;
+}
+
+.preview-container .preview-header h4 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.preview-container .preview-header p {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.preview-container .preview-header .close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.preview-container .preview-header .close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.preview-container .preview-content {
+  padding: 20px;
+  background: var(--editor-bg-secondary);
+  border: 1px solid var(--editor-border-color);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  min-height: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+  word-wrap: break-word;
+}
+
+/* HTML çıktı paneli özel stilleri */
+.output-panel {
+  position: relative;
+  animation: slideIn 0.3s ease-out;
+}
+
+.output-panel .output-header .output-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.output-panel .copy-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.output-panel .copy-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.output-panel .html-output {
+  font-family: 'Consolas', 'Monaco', 'Lucida Console', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--editor-text-primary);
+  background: var(--editor-bg-card);
+  border: 1px solid var(--editor-border-color);
+  border-radius: 6px;
+  padding: 15px;
+  width: 100%;
+  resize: vertical;
+  min-height: 200px;
+  transition: all 0.3s ease;
+}
+
+.output-panel .html-output:focus {
+  outline: none;
+  border-color: var(--editor-gradient-start);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Senkronizasyon animasyonu */
+@keyframes syncPulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+.preview-content,
+.html-output {
+  animation: syncPulse 0.3s ease-in-out;
+}
+
+/* Slide-in animasyonu */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive senkronizasyon panelleri */
+@media (max-width: 768px) {
+  .preview-container .preview-content,
+  .output-panel .html-output {
+    font-size: 14px;
+    padding: 15px;
+  }
+
+  .preview-container .preview-header,
+  .output-panel .output-header {
+    padding: 12px 15px;
+  }
+
+  .output-panel .output-actions {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .output-panel .copy-btn,
+  .preview-container .close-btn {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}
